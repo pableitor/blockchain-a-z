@@ -54,8 +54,9 @@ class Blockchain:
             hash_operation = hashlib.sha256(str(new_proof**2 - previous_proof**2).encode()).hexdigest()
             #string de num. hex con el resultado de la prueba. La prueba no puede ser simetrica
             #el resultado debe ser stringificado y codificado para calcular el hash
-            if hash_operation[:4] == zeros:
+            if hash_operation[:len(zeros)] == zeros:
                 check_proof = True
+                print("Proof: ", new_proof,"\nHash operation: ", hash_operation)
             else:
                 new_proof += 1
         return new_proof
@@ -78,7 +79,7 @@ class Blockchain:
              proof = block['proof']
              hash_operation = hashlib.sha256(str(proof**2 - previous_proof**2).encode()).hexdigest()
              #comprobamos que el proof es valido
-             if hash_operation[:4] != zeros:
+             if hash_operation[:len(zeros)] != zeros:
                  return False
              previous_block = block
              block_index += 1
