@@ -126,8 +126,7 @@ class Blockchain:
         if longest_chain: # si hemos encontrado una cadena mas larga que la nuestra
             self.chain = longest_chain     #reemplazamos nuestra cadena con la que hemos encontrado
             return True
-        else:
-            return False
+        return False
             
 # Parte 2 - Minado de un bloque de la cadena
 
@@ -219,8 +218,19 @@ def connect_node():
                 'total_nodes': list(blockchain.nodes)} # creamos un diccionario como respuesta
     return jsonify(response ), 201 #codigo de respuesta cuando se crea algo a partir de una peticion POST
 
+# Reemplazar la blockchain por la mas larga (si es necesario)    
+@app.route('/replace_chain' , methods=['GET']) 
+def replace_chain():
     
-
+    is_chain_replaced = blockchain.replace_chain() #devuelve True si la cadena no es la mas larga y ha sido reemplazada
+                                                    #False si ya disponemos de la cadena mas larga      
+    if is_chain_replaced:
+        response ={'message': 'Los nodos tenian diferentes cadenas, que han sido reemplazadas por la mas larga',
+                   'new_chain': blockchain.chain}
+    else:
+        response = {'message': 'Todo correcto. La cadena en todos los nodos es la mas larga',
+                    'actual_chain': blockchain.chain}
+    return jsonify(response), 200
 
 # Ejecutar la app
 app.run(host = '0.0.0.0', port=5000)
