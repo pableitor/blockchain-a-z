@@ -138,7 +138,7 @@ app = Flask(__name__)
 
 # Crear la dirección del nodo en el puerto 5000
 node_address = str(uuid4()).replace('-','') #generamos unique user identifier aleatorio sin guiones
-
+owner = 'Hadelin'
 #App test: para probar que el servidor funciona abrir http://localhost:5000/ y deberia salir 'Hello World'
 
 @app.route('/test')
@@ -156,7 +156,7 @@ def mine_block(): #definimos la funcion respuesta a http://.../mine_block
     previous_proof = previous_block['proof']
     proof = blockchain.proof_of_work(previous_proof)
     previous_hash = blockchain.hash(previous_block)
-    blockchain.add_transaction(sender = node_address, receiver = 'Hadelin', amount='10' )
+    blockchain.add_transaction(sender = node_address, receiver = owner, amount='10' )
     block = blockchain.create_block(proof, previous_hash) #guardamos el nuevo bloque
     response = {'message': 'Enhorabuena, has minado un nuevo bloque !!!',
                 'index': block['index'],
