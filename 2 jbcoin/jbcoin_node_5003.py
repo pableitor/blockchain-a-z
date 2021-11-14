@@ -141,7 +141,7 @@ node_address = str(uuid4()).replace('-','') #generamos unique user identifier al
 
 #App test: para probar que el servidor funciona abrir http://localhost:5000/ y deberia salir 'Hello World'
 
-@app.route('/')
+@app.route('/test')
 def hello():
     return "<p>Hello, World!</p>"
     
@@ -207,7 +207,9 @@ def add_transaction():
 # enviamos por POST un fichero json con los nodos que vamos a dar de alta
 @app.route('/connect_node' , methods=['POST']) # POST transaction data
 def connect_node():
-    json = request.get_json() #obtener fichero json posteado por POSTMAN
+    json = request.get_json() #obtener fichero json posteado por POSTMAN : Para crear el fichero json
+                            # clickar pestaña BODY, seleccionar raw, seleccionar JSON y copiamos 
+                            # el contenido del fichero nodes.json en el cuadro de texto)
     nodes = json.get('nodes') # procesamos el json para obtener las direcciones de los nodos
     # el formato del json seria : {'nodes':['127.0.0.0:5001', '127.0.0.0:5002',...]}
     if nodes is None:

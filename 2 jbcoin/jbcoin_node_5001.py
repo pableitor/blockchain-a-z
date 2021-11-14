@@ -137,11 +137,11 @@ app = Flask(__name__)
 #app.config['JSONIFY_PRETTYPRINT_REGULAR'] = False
 
 # Crear la dirección del nodo en el puerto 5000
-node_address = str(uuid4()).replace('-','') #generamos unique user identifier aleatorio sin guiones
-
+node_address = str(uuid4()).replace('-','') #generamos para el nodo un unique user identifier aleatorio sin guiones
+owner = 'Pablo'
 #App test: para probar que el servidor funciona abrir http://localhost:5000/ y deberia salir 'Hello World'
 
-@app.route('/')
+@app.route('/test')
 def hello():
     return "<p>Hello, World!</p>"
     
@@ -156,7 +156,7 @@ def mine_block(): #definimos la funcion respuesta a http://.../mine_block
     previous_proof = previous_block['proof']
     proof = blockchain.proof_of_work(previous_proof)
     previous_hash = blockchain.hash(previous_block)
-    blockchain.add_transaction(sender = node_address, receiver = 'Pablo', amount='10' )
+    blockchain.add_transaction(sender = node_address, receiver = owner, amount='10' )
     block = blockchain.create_block(proof, previous_hash) #guardamos el nuevo bloque
     response = {'message': 'Enhorabuena, has minado un nuevo bloque !!!',
                 'index': block['index'],
@@ -207,7 +207,9 @@ def add_transaction():
 # enviamos por POST un fichero json con los nodos que vamos a dar de alta
 @app.route('/connect_node' , methods=['POST']) # POST transaction data
 def connect_node():
-    json = request.get_json() #obtener fichero json posteado por POSTMAN
+    json = request.get_json() #obtener fichero json posteado por POSTMAN : Para crear el fichero json
+                            # clickar pestaña BODY, seleccionar raw, seleccionar JSON y copiamos 
+                            # el contenido del fichero nodes.json en el cuadro de texto)
     nodes = json.get('nodes') # procesamos el json para obtener las direcciones de los nodos
     # el formato del json seria : {'nodes':['127.0.0.0:5001', '127.0.0.0:5002',...]}
     if nodes is None:

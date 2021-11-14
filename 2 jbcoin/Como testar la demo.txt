@@ -1,0 +1,68 @@
+El archivo jbcoin.py es como una plantilla para cada nodo de la red distribuida.
+Hay que adaptar este archivo cambiando la direccion del nodo, en este caso vamos a tener 3 nodos en el mismo PC, por tanto creamos 3 copias identicas de jbcoin.py y en cada una cambiamos la linea  :
+
+	app.run(host = '0.0.0.0', port=5000)
+
+modificando el puerto donde reside cada nodo (5001, 5002, 5003) 
+
+Si fueran 3 servidores diferentes modificaríamos tambien la dirección IP.
+
+También modificaremos el titular de cada nodo al que se le asignan los jbcoins del minado, en este caso la linea:
+
+    blockchain.add_transaction(sender = node_address, receiver = 'Pablo', amount='10' )
+
+la tenemos que modificar cambiando simplemente el nombre del minero, diferente para cada nodo.
+
+
+Estos 3 cambios los guardamos en 3 archivos diferentes jbcoin_node1.py , jbcoin_node2.py , jbcoin_node3.py 
+
+Lanzamos cada una de los 3 scripts en una consola independiente de Spyder.
+
+Testamos que funcionan correctamente con POSTMAN , abriendo 3 pestañas , una para cada nodo y lanzamos 3 ordenes GET:
+
+	http://localhost:500x/get_chain
+donde x = 1,2,3
+Nos deberia aparecer la blockchain de cada nodo , con un unico bloque.
+
+A continuacion conectamos los 3 nodos entre si. Para ello seleccionamos  POST en cada terminal y para elegir el cuerpo de la solicitud clickamos en BODY, raw y en el desplegable Text seleccionamos JSON. A continuacion pegamos el codigo del dict con los nodos a los que se conecta cada nodo, por ej al nodo 1 se le envia el texto:
+{
+    "nodes" :  ["http://127.0.0.1:5002",
+                "http://127.0.0.1:5003" ]
+}
+Esto hay que hacerlo para cada uno de  los 3 nodos. A continuacion se envia a cada uno de los nodos la solicitud POST:
+
+	http://localhost:500x/connect_node 
+
+A continuacion vamos a minar el primer bloque (sin transacciones) , para ello enviamos la solicitud GET al nodo 1:
+
+	http://localhost:5001/mine_block
+
+El resultado es la adicion de un bloque nuevo a la blockchain del nodo 1. Para actualizar la blockchain en cada nodo lanzamos la orden GET a los nodos restantes (2 y 3):
+
+	http://localhost:500x/replace_chain
+
+Ahora tenemos la misma cadena en los 3 nodos.
+
+Para añadir transacciones enviamos la orden POST:
+
+	http://localhost:500x/add_transaction
+
+Volvemos a editar el BODY y en este caso modificamos la plantilla transactions.json con los datos de la transaccion y lo copiamos en la ventana BODY -> Text -> JSON:
+
+{
+    "sender":"Pablo",
+    "receiver":"Kirill",
+    "amount": 10000
+}
+
+Como resultado nos devuelve un mensaje confirmando que la transacción será minada en el sig. bloque.
+
+En la vida real en sender  se incluiría la clave publica para comprobar la firma del sender y el receiver incluiría la direccion.
+
+Ahora minamos el nuevo bloque igual que antes para ello enviamos la solicitud GET al nodo 1:
+
+	http://localhost:5001/mine_block
+
+Ya tenemos minado el nuevo bloque y a continuacion remplazamos la cadena mas larga (nodo 1) en los nodos 2 y 3 como antes:
+
+http://localhost:500x/replace_chain
