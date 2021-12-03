@@ -136,10 +136,10 @@ app = Flask(__name__)
 # Si da error 500 descomentar la siguiente linea:
 #app.config['JSONIFY_PRETTYPRINT_REGULAR'] = False
 
-# Crear la dirección del nodo en el puerto 5000
+
 node_address = str(uuid4()).replace('-','') #generamos para el nodo un unique user identifier aleatorio sin guiones
 owner = 'Pablo'
-#App test: para probar que el servidor funciona abrir http://localhost:5000/ y deberia salir 'Hello World'
+#App test: para probar que el servidor funciona abrir http://localhost:5000/test y deberia salir 'Hello World'
 
 @app.route('/test')
 def hello():
@@ -233,7 +233,7 @@ def replace_chain():
         response = {'message': 'Todo correcto. La cadena en todos los nodos es la mas larga',
                     'actual_chain': blockchain.chain}
     return jsonify(response), 200
-
+# Crear la dirección del nodo en el puerto 5000
 # Ejecutar la app
-app.run(host = '0.0.0.0', port=5001)
+app.run(host = 'localhost', port=5001)
 

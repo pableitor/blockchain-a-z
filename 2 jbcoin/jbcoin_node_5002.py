@@ -189,7 +189,7 @@ def is_valid():
 # Añadir una nueva transaccion a la cadena de bloques
 @app.route('/add_transaction' , methods=['POST']) # POST transaction data
 def add_transaction():
-    # cuando llamamos a la funcion POSTeamos por POSTMAN un fichero json con los datos 
+    # llamamos a la funcion POSTeando por POSTMAN un fichero json con los datos 
     json = request.get_json() #obtener fichero json posteado por POSTMAN
     transaction_keys = ['sender', 'receiver', 'amount']
     if not all(key in json for key in transaction_keys): #las 3 claves deben estar en el fichero json
